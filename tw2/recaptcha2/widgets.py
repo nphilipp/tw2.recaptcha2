@@ -27,7 +27,7 @@ class ReCaptcha2Widget(Widget):
 
     resources = [recaptcha2_js]
 
-    template = 'tw2.recaptcha2.templates.widget'
+    template = 'tw2.recaptcha2.templates.recaptcha2'
 
     sitekey = Param("Google reCAPTCHA API v2.0 site key", request_local=False,
                     attribute=True, view_name="data-sitekey")

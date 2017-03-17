@@ -25,7 +25,7 @@ class Recaptcha2JSLink(JSLink):
 
     link = "https://www.google.com/recaptcha/api.js"
 
-    location = 'bottom'
+    location = 'bodybottom'
 
 
 recaptcha2_js = Recaptcha2JSLink()

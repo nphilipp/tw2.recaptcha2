@@ -57,11 +57,13 @@ class ReCaptcha2Widget(Widget):
         if self.size is not None and not (isinstance(self.size, int) and
                                           self.size > 0):
             raise ValueError("Tabindex must be a positive integer")
+        self.safe_modify('css_class')
         if self.css_class:
             classes = self.css_class.split()
             if 'g-recaptcha' not in classes:
                 classes.append('g-recaptcha')
-                self.safe_modify('css_class')
                 self.css_class = " ".join(classes)
+        else:
+            self.css_class = 'g-recaptcha'
 
         super(ReCaptcha2Widget, self).prepare()

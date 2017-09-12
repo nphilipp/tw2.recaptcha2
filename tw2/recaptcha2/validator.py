@@ -43,7 +43,7 @@ class ReCaptcha2Validator(Validator):
         params = urlencode({
             'secret': self.secret,
             'remoteip': self.remote_ip,
-            'response': recaptcha_response})
+            'response': value}).encode('utf-8')
 
         request = Request(
             url="https://www.google.com/recaptcha/api/siteverify",

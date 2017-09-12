@@ -54,7 +54,7 @@ class ReCaptcha2Validator(Validator):
         with urlopen(request) as http_response:
             response_dict = json.loads(http_response.read())
             if not response_dict['success']:
-                error_codes = response_dict.get('error_codes', [])
+                error_codes = response_dict.get('error-codes', [])
                 if 'invalid-input-response' in error_codes:
                     raise ValidationError('invalid')
                 elif 'missing-input-response' in error_codes:

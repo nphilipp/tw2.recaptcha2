@@ -44,7 +44,7 @@ class ReCaptcha2Validator(Validator):
                      'User-agent': "tw2.recaptcha2 Python"})
 
         with urlopen(request) as http_response:
-            response_dict = json.loads(http_response.read())
+            response_dict = json.loads(http_response.read().decode('utf-8'))
             if not response_dict['success']:
                 error_codes = response_dict.get('error-codes', [])
                 if 'invalid-input-response' in error_codes:

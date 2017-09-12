@@ -18,7 +18,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-from tw2.core import Widget, Param
+from tw2.core import Widget, Param, Variable, JSSource
 
 from .resources import recaptcha2_js
 
@@ -29,25 +29,26 @@ class ReCaptcha2Widget(Widget):
 
     template = 'tw2.recaptcha2.templates.recaptcha2'
 
-    sitekey = Param("Google reCAPTCHA API v2.0 site key", request_local=False,
-                    attribute=True, view_name="data-sitekey")
+    sitekey = Param("Google reCAPTCHA API v2.0 site key", request_local=False)
 
-    theme = Param("Theme to use (light, dark)", default=None, attribute=True,
-                  view_name="data-theme")
+    theme = Param("Theme to use (light, dark)", default=None)
 
-    captcha_type = Param("Type of captcha to use (image, audio)", default=None,
-                         attribute=True, view_name="data-type")
-    size = Param("Size of Captcha (normal, compact)", default=None,
-                 attribute=True, view_name="data-size")
-    tabindex = Param("Optional tabindex of the widget", default=None, attribute=True,
-                     view_name="data-tabindex")
-    callback = Param("Name of optional callback to execute when the user submits a "
-                     "successful CAPTCHA response", default=None,
-                     attribute=True, view_name="data-callback")
-    expired_callback = Param("Name of optional callback to execute when the recaptcha "
-                             "response expires and the user needs to solve a new CAPTCHA",
-                             default=None, attribute=True,
-                             view_name="data-expired-callback")
+    captcha_type = Param("Type of captcha to use (image, audio)", default=None)
+
+    size = Param("Size of Captcha (normal, compact)", default=None)
+
+    tabindex = Param("Optional tabindex of the widget", default=None)
+
+    callback = Param("Name of optional callback to execute when the user "
+                     "submits a successful CAPTCHA response", default=None)
+
+    expired_callback = Param("Name of optional callback to execute when "
+                             "the recaptcha response expires and the user "
+                             "needs to solve a new CAPTCHA", default=None)
+
+    captcha_div_attrs = Variable()
+
+    copyresponse_js = Variable()
 
     def prepare(self):
         if self.theme not in (None, 'light', 'dark'):
@@ -57,13 +58,34 @@ class ReCaptcha2Widget(Widget):
         if self.size is not None and not (isinstance(self.size, int) and
                                           self.size > 0):
             raise ValueError("Tabindex must be a positive integer")
-        self.safe_modify('css_class')
-        if self.css_class:
-            classes = self.css_class.split()
-            if 'g-recaptcha' not in classes:
-                classes.append('g-recaptcha')
-                self.css_class = " ".join(classes)
+
+        self.captcha_div_attrs = {'data-callback': 'recaptcha2_copy_response'}
+        for attr in ('sitekey', 'theme', 'captcha_type', 'size', 'tabindex',
+                     'expired_callback'):
+            if getattr(self, attr):
+                self.captcha_div_attrs['data-' + attr] = getattr(self, attr)
+
+        if hasattr(self, 'compound_key'):
+            input_name = self.compound_key
         else:
-            self.css_class = 'g-recaptcha'
+            input_name = self.compound_id
+
+        if not self.callback:
+            callback_js_source = ""
+        else:
+            callback_js_source = "{callback}(response);"
+
+        self.copyresponse_js = JSSource(
+            src="function recaptcha2_copy_response(response) {{"
+            "  var div = document.getElementById('{id}');"
+            "  var elements = document.getElementsByName('{name}');"
+            "  for (var i = 0; i < elements.length; i++) {{"
+            "    if (elements[i].type == 'hidden') {{"
+            "      elements[i].value = response;"
+            "    }}"
+            "  }}"
+            "  {callback_js_source}"
+            "}}".format(id=self.compound_id, name=input_name,
+                        callback_js_source=callback_js_source))
 
         super(ReCaptcha2Widget, self).prepare()

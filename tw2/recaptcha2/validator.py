@@ -32,14 +32,6 @@ class ReCaptcha2Validator(Validator):
         return None
 
     def _validate_python(self, value, state):
-        if isinstance(state, dict):
-            # backward compatibility
-            values = state
-        else:
-            values = state.full_dict
-
-        recaptcha_response = values['g-recaptcha-response']
-
         params = urlencode({
             'secret': self.secret,
             'remoteip': self.remote_ip,

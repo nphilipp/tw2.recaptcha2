@@ -32,7 +32,6 @@ class ReCaptcha2Validator(Validator):
         return None
 
     def _validate_python(self, value, state):
-        raise
         if isinstance(state, dict):
             # backward compatibility
             values = state

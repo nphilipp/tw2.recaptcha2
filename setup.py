@@ -1,4 +1,5 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
+
 
 _extras_genshi = ["Genshi >= 0.7"]
 _extras_mako = ["Mako"]
@@ -13,10 +14,9 @@ setup(
     author="Nils Philippsen",
     author_email="nils@tiptoe.de",
     url="https://github.com/nphilipp/tw2.recaptcha2",
-    #download_url="",
     install_requires=[
         "tw2.core",
-        ],
+    ],
     extras_require={
         'genshi': _extras_genshi,
         'mako': _extras_mako,
@@ -31,13 +31,13 @@ setup(
         'tw2.recaptcha2.templates': ["*.html", "*.kajiki", "*.jinja",
                                      "*.mak"],
     },
-    test_suite = 'nose.collector',
+    test_suite='nose.collector',
     entry_points="""
-		[tw2.widgets]
-		widgets = tw2.recaptcha2
+        [tw2.widgets]
+        widgets=tw2.recaptcha2
     """,
-    keywords = ["tw2.widgets"],
-    classifiers = [
+    keywords=["tw2.widgets"],
+    classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Topic :: Software Development :: Libraries :: Python Modules',

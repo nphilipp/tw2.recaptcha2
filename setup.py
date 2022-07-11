@@ -9,7 +9,7 @@ _extras_jinja = ["jinja2"]
 
 setup(
     name="tw2.recaptcha2",
-    version="0.0",
+    version="0.1",
     description="ToscaWidgets2 widget for Google reCAPTCHA API v2.0",
     author="Nils Philippsen",
     author_email="nils@tiptoe.de",
